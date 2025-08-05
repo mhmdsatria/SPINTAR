@@ -1,0 +1,6 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+body {
+    @apply font-sans; /* Gunakan font sans default yang sudah diubah ke Montserrat */
+}
