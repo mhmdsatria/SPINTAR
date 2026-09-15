@@ -1,34 +1,29 @@
 <?php
 
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\KonsultasiController;
-use App\Http\Controllers\SesiController;
+use App\Http\Controllers\PublicController;
+use App\Http\Controllers\FileTestController;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\WhatsappWebhookController;
 
-Route::middleware(['guest'])->group(function () {
-    Route::get('/', [SesiController::class, 'index'])->name('login');
-    Route::post('/', [SesiController::class, 'login']);
+Route::post('/webhook/whatsapp', [WhatsappWebhookController::class, 'handle']);
+Route::get('/', function () {
+    return view('welcome');
 });
 
-Route::get('/home', function(){
-    return redirect('/admin/super-admin');
+Route::get('/konsultasi', [PublicController::class, 'showForm'])->name('konsultasi.show');
+Route::post('/konsultasi', [PublicController::class, 'submitForm'])->name('konsultasi.submit');
+
+
+Route::get('/file-test', function () {
+    return '
+        <form action="/file-test" method="POST" enctype="multipart/form-data">
+            @csrf
+            <input type="file" name="file">
+            <button type="submit">Unggah File</button>
+        </form>
+    ';
 });
 
-Route::middleware(['auth'])->group(function(){
-    Route::get('/admin',[AdminController::class,'superAdmin']);
-    Route::get('/admin/super-admin',[AdminController::class,'superAdmin']);
-    Route::get('/admin/admin',[AdminController::class,'admin']);
-    Route::get('/logout', [SesiController::class, 'logout']);
-    Route::get('/admin/super-admin/add-user', [AdminController::class, 'addUserForm']);
-    Route::post('/admin/super-admin/add-user', [AdminController::class, 'addUser']);
-});
-
-Route::get('/register', [SesiController::class, 'registerForm']);
-Route::post('/register', [SesiController::class, 'register']);
-
-Route::get('/konsultasi', [KonsultasiController::class, 'create'])->name('konsultasi.create');
-Route::post('/konsultasi', [KonsultasiController::class, 'store'])->name('konsultasi.store');
-Route::post('/konsultasi/verifikasi/{id}', [AdminController::class, 'verifikasiKonsultasi'])
-    ->name('konsultasi.verifikasi');
-
+// Rute untuk memproses unggahan file
+Route::post('/file-test', [FileTestController::class, 'uploadTest']);

@@ -9,38 +9,35 @@ class KonsultasiController extends Controller
 {
     public function create()
     {
-        return view('konsultasi');
+        return view('form');
     }
 
     public function store(Request $request)
     {
-        $request->validate([
+        // Validasi data, sesuaikan dengan name di form
+        $validated = $request->validate([
             'nama_lengkap' => 'required|string|max:255',
-            'no_wa' => 'required|string|max:20',
-            'instansi' => 'nullable|string|max:255',
             'email' => 'required|email',
-            'tanggal' => 'required|date',
-            'waktu' => 'required',
-            'deskripsi' => 'required|string',
-            'file' => 'nullable|file|max:2048|mimes:pdf,jpg,jpeg,png,doc,docx',
+            'nomor_whatsapp' => 'required|string',
+            'deskripsi_masalah' => 'required|string',
+            'tanggal_diajukan' => 'nullable|date', // optional, sesuai form
+            'jam_diajukan' => 'nullable|date_format:H:i', // optional
+            'lampiran' => 'nullable|file|max:5120|mimes:pdf,doc,docx,jpg,jpeg,png',
         ]);
 
-        $filePath = null;
-        if ($request->hasFile('file')) {
-            $filePath = $request->file('file')->store('konsultasi_files', 'public');
+        // Handle upload file
+        if ($request->hasFile('lampiran')) {
+            $path = $request->file('lampiran')->store('lampiran_konsultasi', 'public');
+            $validated['file_path'] = $path; // simpan ke kolom file_path di DB
         }
 
-        Konsultasi::create([
-            'nama_lengkap' => $request->nama_lengkap,
-            'no_wa' => $request->no_wa,
-            'instansi' => $request->instansi,
-            'email' => $request->email,
-            'tanggal' => $request->tanggal,
-            'waktu' => $request->waktu,
-            'deskripsi' => $request->deskripsi,
-            'file' => $filePath,
-        ]);
+        // Set status default jika diperlukan
+        $validated['status'] = 'diajukan';
 
-        return back()->with('success', 'Konsultasi berhasil dikirim!');
+        // Simpan ke database
+        Konsultasi::create($validated);
+
+        // Redirect ke home dengan flash message
+        return redirect()->route('home')->with('success', '✅ Konsultasi berhasil dikirim! Tim kami akan segera merespons.');
     }
 }

@@ -1,6 +1,69 @@
+@import 'tailwindcss';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-body {
-    @apply font-sans; /* Gunakan font sans default yang sudah diubah ke Montserrat */
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+/* resources/css/app.css */
+
+
+
+/* Import Font Inter */
+/* @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap'); */
+
+/* Custom Animations */
+/* @layer base {
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    @keyframes scaleIn {
+        from {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+} */
+
+/* Custom Utilities */
+/* @layer utilities {
+    .glass-effect {
+        @apply backdrop-blur-xl bg-white/10 border border-white/20;
+    }
+    .animate-fade-in-up {
+        animation: fadeInUp 0.6s ease-out;
+    }
+
+    .animate-fade-in {
+        animation: fadeIn 0.8s ease-out;
+    }
+
+    .animate-scale-in {
+        animation: scaleIn 0.5s ease-out;
+    }
+} */
